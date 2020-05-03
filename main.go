@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"strings"
 
 	"github.com/o-sk/slackbot-sample/config"
 	"github.com/slack-go/slack"
@@ -28,8 +29,15 @@ func main() {
 				switch ev := msg.Data.(type) {
 				case *slack.MessageEvent:
 					if ev.Channel == cfg.Redirect.FromChannel {
-						fmt.Printf("Message: %v\n", ev)
-						rtm.SendMessage(rtm.NewOutgoingMessage(ev.Text, cfg.Redirect.ToChannel))
+						if ev.SubType != "" || ev.ThreadTimestamp != "" {
+							continue
+						}
+						text := fmt.Sprintf("https://%s.slack.com/archives/%s/p%s",
+							cfg.Slack.Team,
+							ev.Channel,
+							strings.Join(strings.Split(ev.Timestamp, "."), ""),
+						)
+						rtm.SendMessage(rtm.NewOutgoingMessage(text, cfg.Redirect.ToChannel))
 					}
 
 				case *slack.RTMError:
