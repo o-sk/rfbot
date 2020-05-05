@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/o-sk/rfbot/config"
@@ -20,6 +21,19 @@ func main() {
 			cfg := config.Load("config.yml")
 			api := slack.New(cfg.Slack.API_Token)
 
+			var filter *regexp.Regexp
+			if len(cfg.Filter.NgWords) > 0 {
+				ws := make([]string, len(cfg.Filter.NgWords))
+				for i, w := range cfg.Filter.NgWords {
+					ws[i] = regexp.QuoteMeta(w)
+				}
+				var err error
+				filter, err = regexp.Compile("(" + strings.Join(ws, "|") + ")")
+				if err != nil {
+					return err
+				}
+			}
+
 			rtm := api.NewRTM(slack.RTMOptionConnParams(url.Values{
 				"batch_presence_aware": {"1"},
 			}))
@@ -32,6 +46,11 @@ func main() {
 						if ev.SubType != "" || ev.ThreadTimestamp != "" {
 							continue
 						}
+
+						if filter != nil && filter.FindString(ev.Text) != "" {
+							continue
+						}
+
 						text := fmt.Sprintf("https://%s.slack.com/archives/%s/p%s",
 							cfg.Slack.Team,
 							ev.Channel,

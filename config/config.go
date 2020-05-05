@@ -13,6 +13,9 @@ type Config struct {
 		FromChannel string `required:"true" env:"REDIRECT_FROM_CHANNEL"`
 		ToChannel   string `required:"true" env:"REDIRECT_TO_CHANNEL"`
 	}
+	Filter struct {
+		NgWords []string `env:"FILTER_NG_WORDS"`
+	}
 }
 
 func Load(file string) *Config {
