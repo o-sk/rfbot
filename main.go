@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/o-sk/slackbot-sample/config"
+	"github.com/o-sk/rfbot/config"
 	"github.com/slack-go/slack"
 	"github.com/urfave/cli"
 	"golang.org/x/xerrors"

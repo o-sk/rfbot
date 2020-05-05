@@ -1,4 +1,4 @@
-module github.com/o-sk/slackbot-sample
+module github.com/o-sk/rfbot
 
 go 1.14
 
