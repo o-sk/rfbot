@@ -6,8 +6,8 @@ import (
 
 type Config struct {
 	Slack struct {
-		API_Token string `required:"true" env:"SLACK_API_TOKEN"`
-		Team      string `required:"true" env:"SLACK_TEAM"`
+		APIToken string `required:"true" env:"SLACK_API_TOKEN"`
+		Team     string `required:"true" env:"SLACK_TEAM"`
 	}
 	Redirect struct {
 		FromChannel string `required:"true" env:"REDIRECT_FROM_CHANNEL"`

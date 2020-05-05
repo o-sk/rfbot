@@ -19,7 +19,7 @@ func main() {
 		Name: "slackbot-sample",
 		Action: func(c *cli.Context) error {
 			cfg := config.Load("config.yml")
-			api := slack.New(cfg.Slack.API_Token)
+			api := slack.New(cfg.Slack.APIToken)
 
 			var filter *regexp.Regexp
 			if len(cfg.Filter.NgWords) > 0 {
