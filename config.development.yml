@@ -1,2 +1,10 @@
 slack:
-  api_token: your api token
+  apitoken: your api token
+  team: your team
+redirect:
+  fromchannel: channel id
+  tochannel: channel id
+filter:
+  ngwords:
+    - ng words1
+    - ng words2
