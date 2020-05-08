@@ -15,6 +15,7 @@ type Config struct {
 	}
 	Filter struct {
 		NgWords []string `env:"FILTER_NG_WORDS"`
+		OkUsers []string `env:"FILTER_OK_USERS"`
 	}
 }
 

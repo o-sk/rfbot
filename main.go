@@ -34,6 +34,11 @@ func main() {
 				}
 			}
 
+			okUsers := make(map[string]struct{}, len(cfg.Filter.OkUsers))
+			for _, u := range cfg.Filter.OkUsers {
+				okUsers[u] = struct{}{}
+			}
+
 			rtm := api.NewRTM(slack.RTMOptionConnParams(url.Values{
 				"batch_presence_aware": {"1"},
 			}))
@@ -47,7 +52,8 @@ func main() {
 							continue
 						}
 
-						if filter != nil && filter.FindString(ev.Text) != "" {
+						if _, ok := okUsers[ev.User]; !ok &&
+							filter != nil && filter.FindString(ev.Text) != "" {
 							continue
 						}
 

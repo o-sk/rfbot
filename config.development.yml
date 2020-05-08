@@ -8,3 +8,5 @@ filter:
   ngwords:
     - ng words1
     - ng words2
+  okusers:
+    - ok users1
