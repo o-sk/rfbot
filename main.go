@@ -14,6 +14,18 @@ import (
 	"golang.org/x/xerrors"
 )
 
+func makeFilter(ngWords []string) (*regexp.Regexp, error) {
+	if len(ngWords) == 0 {
+		return nil, nil
+	}
+
+	ws := make([]string, len(ngWords))
+	for i, w := range ngWords {
+		ws[i] = regexp.QuoteMeta(w)
+	}
+	return regexp.Compile("(" + strings.Join(ws, "|") + ")")
+}
+
 func main() {
 	app := &cli.App{
 		Name: "slackbot-sample",
@@ -21,17 +33,9 @@ func main() {
 			cfg := config.Load("config.yml")
 			api := slack.New(cfg.Slack.APIToken)
 
-			var filter *regexp.Regexp
-			if len(cfg.Filter.NgWords) > 0 {
-				ws := make([]string, len(cfg.Filter.NgWords))
-				for i, w := range cfg.Filter.NgWords {
-					ws[i] = regexp.QuoteMeta(w)
-				}
-				var err error
-				filter, err = regexp.Compile("(" + strings.Join(ws, "|") + ")")
-				if err != nil {
-					return err
-				}
+			filter, err := makeFilter(cfg.Filter.NgWords)
+			if err != nil {
+				return err
 			}
 
 			okUsers := make(map[string]struct{}, len(cfg.Filter.OkUsers))
