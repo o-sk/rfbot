@@ -26,6 +26,14 @@ func makeFilter(ngWords []string) (*regexp.Regexp, error) {
 	return regexp.Compile("(" + strings.Join(ws, "|") + ")")
 }
 
+func toMap(l []string) map[string]struct{} {
+	m := make(map[string]struct{}, len(l))
+	for _, v := range l {
+		m[v] = struct{}{}
+	}
+	return m
+}
+
 func main() {
 	app := &cli.App{
 		Name: "slackbot-sample",
@@ -38,10 +46,7 @@ func main() {
 				return err
 			}
 
-			okUsers := make(map[string]struct{}, len(cfg.Filter.OkUsers))
-			for _, u := range cfg.Filter.OkUsers {
-				okUsers[u] = struct{}{}
-			}
+			okUsers := toMap(cfg.Filter.OkUsers)
 
 			rtm := api.NewRTM(slack.RTMOptionConnParams(url.Values{
 				"batch_presence_aware": {"1"},
